@@ -36,7 +36,7 @@ if st.button("Generate"):
         st.write(creative_response)
 
         # Generate predictable response
-        predictable_response = generate_text(prompt_input, token_limit, creativity=0.5)
+        predictable_response = generate_text(prompt_input, token_limit, creativity=0.6)
         st.subheader("Predictable Response:")
         st.write(predictable_response)
 
