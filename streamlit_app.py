@@ -1,44 +1,46 @@
 import streamlit as st
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
-import torch
-import os
 
-### Title of app on Streamlit
-st.title("Rahul Week6 HW")
+# Application Title
+st.title("GPT-2 Text Generator")
 
-### Enter BUID
-BUID = 59385965
+# BU ID
+user_id = 59385965  
 
-### OpenAI Secret Key
-my_secret_key = st.secrets['Week6']
+# Load the pre-trained GPT-2 model and tokenizer
+model_name = "gpt2"
+gpt2_model = GPT2LMHeadModel.from_pretrained(model_name)
+gpt2_tokenizer = GPT2Tokenizer.from_pretrained(model_name)
 
-### Load GPT2 from hugging face
-model = GPT2LMHeadModel.from_pretrained("gpt2")
-tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
-
-### Prompt input on streamlit app by user
-prompt = st.text_input("What is your prompt today?", "Enter your prompt here")
-max_tokens = st.number_input("Enter the number of tokens for the response", min_value=1, max_value=100, value=50)
-
-### Engineer the types of responses based on temperature
-if st.button("Generate Response"):
-    inputs = tokenizer(prompt, return_tensors="pt")
-    outputs_high = model.generate(
-        inputs['input_ids'], 
-        max_length=max_tokens,
-        do_sample=True, 
-        temperature=1.9
+# Function to generate text based on the user input
+def generate_text(prompt, max_length, creativity):
+    input_ids = gpt2_tokenizer.encode(prompt, return_tensors="pt")
+    generated = gpt2_model.generate(
+        input_ids,
+        max_length=max_length,
+        do_sample=True,
+        temperature=creativity
     )
-    highly_creative_response = tokenizer.decode(outputs_high[0], skip_special_tokens=True)
-    st.write("Highly Creative Response:")
-    st.write(highly_creative_response)
+    return gpt2_tokenizer.decode(generated[0], skip_special_tokens=True)
 
-    outputs_low = model.generate(
-        inputs['input_ids'], 
-        max_length=max_tokens, 
-        do_sample=True, 
-        temperature=0.5
-     )
-    highly_predictable_response = tokenizer.decode(outputs_low[0], skip_special_tokens=True)
-    st.write("Highly Predictable Response:")
-    st.write(highly_predictable_response)
+# Input fields for the user prompt and number of tokens
+prompt_input = st.text_input("Enter your text prompt:", "")
+token_limit = st.number_input("Select the number of tokens for output:", min_value=1, max_value=100, value=50)
+
+# Button to generate responses
+if st.button("Generate Responses"):
+    if prompt_input:
+        # Generate a highly creative response
+        creative_response = generate_text(prompt_input, token_limit, creativity=1.9)
+        st.subheader("Creative Response:")
+        st.write(creative_response)
+
+        # Generate a more predictable response
+        predictable_response = generate_text(prompt_input, token_limit, creativity=0.5)
+        st.subheader("Predictable Response:")
+        st.write(predictable_response)
+
+        # Display the user ID for tracking purposes
+        st.write(f"User ID: {user_id}")
+    else:
+        st.warning("Please enter a prompt to generate responses.")
