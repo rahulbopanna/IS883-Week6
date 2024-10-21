@@ -41,6 +41,6 @@ if st.button("Generate"):
         st.write(predictable_response)
 
         # Display the user ID for tracking purposes
-        st.write(f"User ID: {user_id}")
+        st.write(f"User ID: {bu_id}")
     else:
         st.warning("Please enter a prompt to generate responses.")
