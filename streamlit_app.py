@@ -2,10 +2,10 @@ import streamlit as st
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 
 # Application Title
-st.title("GPT-2 Text Generator")
+st.title("Week 6 App")
 
 # BU ID
-user_id = 59385965  
+bu_id = 59385965  
 
 # Load the pre-trained GPT-2 model and tokenizer
 model_name = "gpt2"
@@ -28,7 +28,7 @@ prompt_input = st.text_input("Enter your text prompt:", "")
 token_limit = st.number_input("Select the number of tokens for output:", min_value=1, max_value=100, value=50)
 
 # Button to generate responses
-if st.button("Generate Responses"):
+if st.button("Generate"):
     if prompt_input:
         # Generate a highly creative response
         creative_response = generate_text(prompt_input, token_limit, creativity=1.9)
